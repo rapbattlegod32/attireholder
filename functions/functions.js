@@ -29,6 +29,37 @@ async function groupStats() {
     }
 }
 
+async function getMemberList() {
+    const currentUser = await noblox.setCookie(robloseccookie)
+    //get all roles in the group
+    const roles = await noblox.getRoles(groupid)
+    //gets id from each role
+    const roleIDs = roles.map(role => role.ID);
+    //list of every single member
+    const playerlist = await noblox.getPlayers(groupid, roleIDs)
+    //get player names
+    const membernames = playerlist.map(user => user.username.toLowerCase())
+    return { memberNames: membernames };
+}
+
+async function convertUserToId(user) {
+    try {
+        const currentUser = await noblox.setCookie(robloseccookie)
+        const id = await noblox.getIdFromUsername(user)
+        return { ID: id }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function exileUser(id) {
+    try {
+        noblox.exile(groupid, id)
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 //gets the current group shout
 async function readShout() {
     let groupshout = await noblox.getShout(groupid)
@@ -61,5 +92,8 @@ module.exports = {
     groupStats,
     readShout,
     postShout,
-    logoGroup
+    logoGroup,
+    getMemberList,
+    convertUserToId,
+    exileUser
 };

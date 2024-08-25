@@ -1,11 +1,12 @@
 const Discord = require('discord.js');
 const { discordaccount: { token, prefix }, robloxaccount: { robloseccookie, groupid } } = require('../../settings/secrets.json');
-const { checkFunds, groupname } = require('../../functions/functions.js');
+const { checkFunds, groupStats } = require('../../functions/functions.js');
 
 module.exports = {
   name: "funds",
   async execute(message, args) {
     try {
+      const { groupname } = await groupStats();
       //checks if user has sent additional args e.g 'year', 'month' etc
       //if user hasnt sent args, it will send default 'past 7 days'
       if (args[0] == null) {
