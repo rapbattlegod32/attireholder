@@ -81,17 +81,10 @@ async function logoGroup(){
     }
 }
 
-//post a group shout
-async function postShout(shoutbody) {
-
-}
-
-
 module.exports = {
     checkFunds,
     groupStats,
     readShout,
-    postShout,
     logoGroup,
     getMemberList,
     convertUserToId,
