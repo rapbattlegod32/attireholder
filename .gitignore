@@ -1,8 +1,3 @@
-/commands
-/functions
 /node_modules
 /package-lock.json
-/package.json
 /settings
-/start.bat
-/test.js
