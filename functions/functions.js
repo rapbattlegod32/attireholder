@@ -81,6 +81,37 @@ async function logoGroup(){
     }
 }
 
+async function getProfile(username) {
+  try {
+    const ID = await noblox.getIdFromUsername(username);
+    let playerinfo = await noblox.getPlayerInfo(ID);
+
+    return {
+      playerinfoage: playerinfo.age,
+      playerinfodisplayname: playerinfo.displayName,
+      playerinfoblurb: playerinfo.blurb,
+      playerinfofollowercount: playerinfo.followerCount,
+      playerinfofollowingcount: playerinfo.followingCount,
+      playerinfofriendcount: playerinfo.friendCount,
+      playerinfoisbanned: playerinfo.isBanned,
+      playerinfojoindate: playerinfo.joinDate,
+      playerinfooldnames: playerinfo.oldNames,
+      ID: ID
+    };
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function checkIfPlayerExists(username){
+    try {
+        const userId = await noblox.getIdFromUsername(username);
+        return { userId }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     checkFunds,
     groupStats,
@@ -88,5 +119,7 @@ module.exports = {
     logoGroup,
     getMemberList,
     convertUserToId,
-    exileUser
+    exileUser,
+    getProfile,
+    checkIfPlayerExists
 };
