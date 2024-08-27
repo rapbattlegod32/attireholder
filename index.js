@@ -28,7 +28,7 @@ client.on('message', message => {
 	const commandName = args.shift().toLowerCase();
 
 	const command = client.commands.get(commandName)
-		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))
 
 	if (!command) return;
 
@@ -66,5 +66,6 @@ async function startApp () {
     console.log(`[roblox] Successfully logged into [${currentUser.name}] | [${currentUser.id}]`)
 }
 startApp()
+
 
 client.login(token);
