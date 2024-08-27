@@ -124,7 +124,29 @@ async function getGroups(username){
     } catch (error) { 
         console.log(error);
     }
+}
 
+async function getBadges(username){
+    try { 
+        const userId = await noblox.getIdFromUsername(username)
+        let badges = await noblox.getPlayerBadges(userId)
+        return {
+            numberofbadges: badges.length
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function playerPicture(username){
+    try {
+        let userId = await noblox.getIdFromUsername(username)
+        let picture = await noblox.getPlayerThumbnail(userId)
+        let imageurl = picture[0].imageUrl;
+        return { imageurl }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 module.exports = {
@@ -137,5 +159,7 @@ module.exports = {
     exileUser,
     getProfile,
     checkIfPlayerExists,
-    getGroups
+    getGroups,
+    getBadges,
+    playerPicture
 };
