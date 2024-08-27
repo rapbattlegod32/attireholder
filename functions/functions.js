@@ -1,5 +1,6 @@
 const noblox = require('noblox.js');
 const { discordaccount: { token, prefix }, robloxaccount: { robloseccookie, groupid } } = require('../settings/secrets.json');
+const fetch = require('node-fetch');
 
 //checks amount of funds in the group
 async function checkFunds(timeframe) {
@@ -149,6 +150,59 @@ async function playerPicture(username){
     }
 }
 
+async function seePremium(username){
+    try {
+        let userId = await noblox.getIdFromUsername(username)
+        let premium = await noblox.getPremium(userId)
+        return { premium }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function getStatus(username){
+    try {
+        let userId = await noblox.getIdFromUsername(username)
+        let presence = await noblox.getPresences(userId)
+
+        console.log(presence);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function fetchCollectibles(username){
+    try {
+        let userId = await noblox.getIdFromUsername(username)
+        
+        //check if inventory is viewable
+        
+        const response = await fetch(`https://inventory.roblox.com/v1/users/${userId}/can-view-inventory`);
+        const data = await response.json();
+        console.log(data.canView);
+
+        if (data.canView === false){
+            let amountofcollectibles = 'inv access denied';
+            let sum = 'inv access denied';
+            return { amountofcollectibles, sum };
+        }
+
+        let collectibles = await noblox.getCollectibles({userId: userId})
+        let amountofcollectibles = collectibles.length;
+        let arrprice = collectibles.map(obj => obj.recentAveragePrice)
+        let sum = 0;
+        arrprice.forEach((el) => sum += el);
+
+        return {
+            amountofcollectibles,
+            sum
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 module.exports = {
     checkFunds,
     groupStats,
@@ -161,5 +215,8 @@ module.exports = {
     checkIfPlayerExists,
     getGroups,
     getBadges,
-    playerPicture
+    playerPicture,
+    getStatus,
+    seePremium,
+    fetchCollectibles
 };
