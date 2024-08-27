@@ -201,6 +201,19 @@ async function genXCSRF(){
     }
 }
 
+async function currentUser(){
+    try {
+        const user = await noblox.getAuthenticatedUser()
+        return {
+            displayname: user.displayName,
+            username: user.name,
+            id: user.id
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     checkFunds,
     groupStats,
@@ -216,5 +229,6 @@ module.exports = {
     playerPicture,
     genXCSRF,
     seePremium,
-    fetchCollectibles
+    fetchCollectibles,
+    currentUser
 };
