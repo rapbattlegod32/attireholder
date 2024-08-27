@@ -108,10 +108,10 @@ async function checkIfPlayerExists(username){
     try {
         const userId = await noblox.getIdFromUsername(username);
         if (userId === null){
-            console.log('Player does not exist');
-            return;
+            console.log('[roblox] Player does not exist');
+            return { exists: false, userId: null };
         }
-        return { userId }
+        return { exists: true, userId };
     } catch (error) {
         console.log(error);
     }
@@ -160,17 +160,6 @@ async function seePremium(username){
     }
 }
 
-async function getStatus(username){
-    try {
-        let userId = await noblox.getIdFromUsername(username)
-        let presence = await noblox.getPresences(userId)
-
-        console.log(presence);
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 async function fetchCollectibles(username){
     try {
         let userId = await noblox.getIdFromUsername(username)
@@ -202,6 +191,15 @@ async function fetchCollectibles(username){
     }
 }
 
+async function genXCSRF(){
+    try {
+        const currentUser = await noblox.setCookie(robloseccookie)
+        const XCSRF = await noblox.getGeneralToken(robloseccookie)
+        return { XCSRF }
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 module.exports = {
     checkFunds,
@@ -216,7 +214,7 @@ module.exports = {
     getGroups,
     getBadges,
     playerPicture,
-    getStatus,
+    genXCSRF,
     seePremium,
     fetchCollectibles
 };
