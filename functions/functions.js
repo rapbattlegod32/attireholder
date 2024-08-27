@@ -106,10 +106,25 @@ async function getProfile(username) {
 async function checkIfPlayerExists(username){
     try {
         const userId = await noblox.getIdFromUsername(username);
+        if (userId === null){
+            console.log('Player does not exist');
+            return;
+        }
         return { userId }
     } catch (error) {
         console.log(error);
     }
+}
+
+async function getGroups(username){
+    try {
+        const userId = await noblox.getIdFromUsername(username)
+        let groups = await noblox.getGroups(userId)
+        return { groupslength: groups.length }
+    } catch (error) { 
+        console.log(error);
+    }
+
 }
 
 module.exports = {
@@ -121,5 +136,6 @@ module.exports = {
     convertUserToId,
     exileUser,
     getProfile,
-    checkIfPlayerExists
+    checkIfPlayerExists,
+    getGroups
 };
