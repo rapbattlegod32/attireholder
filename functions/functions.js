@@ -283,6 +283,16 @@ async function arrayPlayerThumbnails(username){
     }
 }
 
+async function yearSales(){
+    try {
+        const currentUser = await noblox.setCookie(robloseccookie)
+        let revenueSum = await noblox.getGroupRevenueSummary(groupid, "Year")
+        return { revenueSum: revenueSum.itemSaleRobux }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     checkFunds,
     groupStats,
@@ -303,5 +313,6 @@ module.exports = {
     getHash,
     session,
     isThereAPrimaryGroup,
-    arrayPlayerThumbnails
+    arrayPlayerThumbnails,
+    yearSales
 };
