@@ -1,12 +1,10 @@
-const { inventoryCheck } = require('../../functions/functions.js');
+const { isThereAPrimaryGroup, arrayPlayerThumbnails } = require('../../functions/functions.js');
 
 module.exports = {
     name: "testcmd",
     async execute(message, args){
-        if (!args[0]){
-            message.channel.send('Please give args');
-            return;
-        }
-        inventoryCheck(args[0])
+        let x = "chadgod32";
+        const { thumbheadid, thumbimageurl } = await arrayPlayerThumbnails(x);
+        message.channel.send(thumbimageurl);
     }
 }
