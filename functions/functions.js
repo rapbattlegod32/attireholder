@@ -1,6 +1,7 @@
 const noblox = require('noblox.js');
 const { discordaccount: { token, prefix }, robloxaccount: { robloseccookie, groupid } } = require('../settings/secrets.json');
 const fetch = require('node-fetch');
+const fs = require('node:fs');
 
 //checks amount of funds in the group
 async function checkFunds(timeframe) {
@@ -127,6 +128,30 @@ async function getGroups(username){
     }
 }
 
+async function isThereAPrimaryGroup(username){
+    try {
+        const userId = await noblox.getIdFromUsername(username)
+        const response = await fetch(`https://groups.roblox.com/v1/users/${userId}/groups/primary/role`);
+        const data = await response.json();
+        if (data === null){
+            let primaryboolean = false;
+            console.log('No primary group');
+            return { 
+                role: false,
+                primaryboolean
+             };
+        }
+
+        let primaryboolean = data.group.name;
+        return {
+            role: data.role.name,
+            primaryboolean
+        }
+    } catch (error) {
+        console.log(error);
+    }
+} 
+
 async function getBadges(username){
     try { 
         const userId = await noblox.getIdFromUsername(username)
@@ -214,6 +239,50 @@ async function currentUser(){
     }
 }
 
+async function session(){
+    try {
+        const currentUser = await noblox.setCookie(robloseccookie);
+        const currentsession = await noblox.getSession(robloseccookie);
+
+        return {
+            currentsession: currentsession.toString()
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function getHash(){
+    try {
+        const currentUser = await noblox.setCookie(robloseccookie);
+        const hash = await noblox.getHash(robloseccookie);
+        return {
+            hash
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function arrayPlayerThumbnails(username){
+    try {
+            //9 players
+    let userId = await noblox.getIdFromUsername(username)
+    let friends = await noblox.getFriends(userId)
+    let sortedFriends = friends.data.sort((a, b) => b.isOnline - a.isOnline).slice(0, 9);
+
+    let displayNames = sortedFriends.map(friend => friend.displayName);
+    let IDs = sortedFriends.map(friend => friend.id);
+    
+    let thumbnail_circheadshot = await noblox.getPlayerThumbnail({userIds: IDs, isCircular: true, cropType: 'Headshot'})
+    let thumbheadid = thumbnail_circheadshot.map(obj => obj.targetId);
+    let thumbimageurl = thumbnail_circheadshot.map(obj => obj.imageUrl);
+    return { thumbheadid, thumbimageurl }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     checkFunds,
     groupStats,
@@ -230,5 +299,9 @@ module.exports = {
     genXCSRF,
     seePremium,
     fetchCollectibles,
-    currentUser
+    currentUser,
+    getHash,
+    session,
+    isThereAPrimaryGroup,
+    arrayPlayerThumbnails
 };

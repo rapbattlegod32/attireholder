@@ -14,8 +14,8 @@ module.exports = {
             **\`;funds:\`** \`See financial data of the group.\`\n
             **\`;getshout:\`** \`Get current shout of group.\`\n
             **\`;groupstats:\`** \`Group info.\`\n
-            **\`;exists: [username]\`** \`Check if player exists.\`\n
-            **\`;profile [username] {advanced}:\`** \`Gets a users profile.\`\n
+            **\`;exists [username]:\`** \`Check if player exists.\`\n
+            **\`;profile [username]:\`** \`Gets a users profile.\`\n
             **\`;ping:\`** \`Pong.\`\n
         `)
         .setTimestamp()
