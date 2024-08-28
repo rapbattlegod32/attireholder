@@ -2,6 +2,7 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const noblox = require('noblox.js');
 const { discordaccount: { token, prefix }, robloxaccount: { robloseccookie, groupid } } = require('./settings/secrets.json');
+const { groupStats, yearSales } = require('./functions/functions.js');
 
 
 const client = new Discord.Client();
@@ -16,9 +17,24 @@ for (const folder of commandFolders) {
 		client.commands.set(command.name, command);
 	}
 }
-client.once('ready', () => {
+client.once('ready', async () => {
 	console.log(`[discord] Successfully logged into [${client.user.tag}] | [${client.user.id}]`);
+
+	async function randomstatus(){
+		let { groupmembers, groupname } = await groupStats();
+		let { revenueSum } = await yearSales();
+		let arr = [
+			{ name: `${groupmembers} members`, type: 'WATCHING' },
+			{ name: `with ${revenueSum} robux`, type: 'PLAYING' },
+			{ name: `over ${groupname}`, type: 'WATCHING'}
+		];
+		let pickedstatus = arr[Math.floor(arr.length * Math.random())];
+		client.user.setActivity(pickedstatus);  // Set activity here
+	}
+
+	var intervalID = globalThis.setInterval(randomstatus, 15000);  // Call randomstatus every 15 seconds
 });
+
 
 
 client.on('message', message => {
