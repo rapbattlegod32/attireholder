@@ -17,6 +17,7 @@ module.exports = {
             return;
         }
 
+        //gets all members in group and fetches all their ids
         const { memberNames } = await getMemberList()
         if (memberNames.includes(args[0].toLowerCase())) {
             try {

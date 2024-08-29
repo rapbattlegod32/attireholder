@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const robloseccookie = require('../../settings/secrets.json');
+const { robloseccookie, administrators }= require('../../settings/secrets.json');
 const { genXCSRF } = require('../../functions/functions.js');
 
 module.exports = {

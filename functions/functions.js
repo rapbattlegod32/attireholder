@@ -264,25 +264,6 @@ async function getHash(){
     }
 }
 
-async function arrayPlayerThumbnails(username){
-    try {
-            //9 players
-    let userId = await noblox.getIdFromUsername(username)
-    let friends = await noblox.getFriends(userId)
-    let sortedFriends = friends.data.sort((a, b) => b.isOnline - a.isOnline).slice(0, 9);
-
-    let displayNames = sortedFriends.map(friend => friend.displayName);
-    let IDs = sortedFriends.map(friend => friend.id);
-    
-    let thumbnail_circheadshot = await noblox.getPlayerThumbnail({userIds: IDs, isCircular: true, cropType: 'Headshot'})
-    let thumbheadid = thumbnail_circheadshot.map(obj => obj.targetId);
-    let thumbimageurl = thumbnail_circheadshot.map(obj => obj.imageUrl);
-    return { thumbheadid, thumbimageurl }
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 async function yearSales(){
     try {
         const currentUser = await noblox.setCookie(robloseccookie)
@@ -313,6 +294,5 @@ module.exports = {
     getHash,
     session,
     isThereAPrimaryGroup,
-    arrayPlayerThumbnails,
     yearSales
 };

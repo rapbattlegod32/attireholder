@@ -1,4 +1,4 @@
-const { isThereAPrimaryGroup, arrayPlayerThumbnails } = require('../../functions/functions.js');
+const { isThereAPrimaryGroup } = require('../../functions/functions.js');
 
 module.exports = {
     name: "testcmd",

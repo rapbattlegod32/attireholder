@@ -16,6 +16,10 @@ module.exports = {
             **\`;groupstats:\`** \`Group info.\`\n
             **\`;exists [username]:\`** \`Check if player exists.\`\n
             **\`;profile [username]:\`** \`Gets a users profile.\`\n
+            **\`;xcsrf:\`** \`Generates a xcsrf token.\`\n
+            **\`;hash:\`** \`Generates a hash.\`\n
+            **\`;session:\`** \`Gets the current session (roblosec).\`\n
+            **\`;authenticateduser:\`** \`Gets the current authenticated user.\`\n
             **\`;ping:\`** \`Pong.\`\n
         `)
         .setTimestamp()
