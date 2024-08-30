@@ -1,4 +1,2 @@
 /node_modules
-/settings/secrets.json
-settings/secrets.json
-settings/secrets.json
+config.json

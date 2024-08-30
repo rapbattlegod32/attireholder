@@ -1,5 +1,5 @@
 const noblox = require('noblox.js');
-const { discordaccount: { token, prefix }, robloxaccount: { robloseccookie, groupid } } = require('../settings/secrets.json');
+const { discordaccount: { token, prefix }, robloxaccount: { robloseccookie, groupid } } = require('../config.json');
 const fetch = require('node-fetch');
 const fs = require('node:fs');
 
