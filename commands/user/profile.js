@@ -24,6 +24,10 @@ module.exports = {
         let { sum, amountofcollectibles } = await fetchCollectibles(args[0]);
         let { primaryboolean, role } = await isThereAPrimaryGroup(args[0]);
 
+
+        let primarybooleantostring = primaryboolean ? "true" : "none";
+        let rolestring = role ? "true" : "none";
+
         const embed = new Discord.MessageEmbed()
         .setTitle(`Profile Info(${args[0]})`)
         .addFields(
@@ -40,8 +44,8 @@ module.exports = {
             { name: `Premium?`, value: `\`${premium}\``, inline: true },
             { name: `Limited Count`, value: `\`${amountofcollectibles}\``, inline: true},
             { name: `Total RAP`, value: `\`${sum}\``, inline: true },
-            { name: `Primary Group`, value: `\`${primaryboolean}\``, inline: true },
-            { name: `Role`, value: `\`${role}\``, inline: true },
+            { name: `Primary Group`, value: `\`${primarybooleantostring}\``, inline: true },
+            { name: `Role`, value: `\`${rolestring}\``, inline: true },
             { name: `Date Joined`, value: `\`${playerinfojoindate}\``, inline: false },
             { name: `Blurb`, value: `\`"${playerinfoblurb}"\``, inline: false },
             { name: `Old Names`, value: `\`${playerinfooldnames}\``, inline: false },
