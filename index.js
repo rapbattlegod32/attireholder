@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const noblox = require('noblox.js');
-const { discordaccount: { token, prefix }, robloxaccount: { robloseccookie, groupid } } = require('./settings/secrets.json');
+const { discordaccount: { token, prefix }, robloxaccount: { robloseccookie, groupid } } = require('./config.json');
 const { groupStats, yearSales } = require('./functions/functions.js');
 
 
