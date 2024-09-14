@@ -2,3 +2,5 @@
 config.json
 .eslintrc.json
 /events/env.js
+todo.md
+/.idea
