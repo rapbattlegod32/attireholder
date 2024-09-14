@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { getIdFromUsername } = require('../../functions.js');
+const { getIdFromUsername } = require('../../functions/userFunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,9 +10,9 @@ module.exports = {
 			.setDescription('username to get ID from')
 			.setRequired(true)),
 	async execute(interaction) {
-        const username = interaction.option.getString("username");
-		const { userId } = await getIdFromUsername(username);
+        const username = interaction.options.getString("username");
+		const { userId, hasverifiedbadge, displayName } = await getIdFromUsername(username);
 
-		await interaction.reply(`USERNAME: \`${username}\`\nID: \`${userId}\``)
+		await interaction.reply(`\`USERNAME:\` \`${username}\`\n\`DISPLAY NAME:\` ${displayName}\n\`ID:\` \`${userId}\`\n\`VERIFIED BADGE:\` \`${hasverifiedbadge}\``)
 	},
 };
