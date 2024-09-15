@@ -10,9 +10,5 @@ module.exports = {
 			.setDescription('username to get ID from')
 			.setRequired(true)),
 	async execute(interaction) {
-        const username = interaction.options.getString("username");
-		const { userId, hasverifiedbadge, displayName } = await getIdFromUsername(username);
-
-		await interaction.reply(`\`USERNAME:\` \`${username}\`\n\`DISPLAY NAME:\` ${displayName}\n\`ID:\` \`${userId}\`\n\`VERIFIED BADGE:\` \`${hasverifiedbadge}\``)
 	},
 };
