@@ -27,8 +27,31 @@ async function getIdFromUsername(username) {
     }
 }
 
+async function getUserFromId(id){
+    try {
+        const response = await axios.post('https://users.roblox.com/v1/users', {
+            userIds: [
+                id
+            ],
+            excludeBannedUsers: false
+        });
+
+        if (response.data && response.data.data && response.data.data[0]) {
+            var name = response.data.data[0].name; var displayName = response.data.data[0].displayName; var hasVerifiedBadge = response.data.data[0].hasVerifiedBadge;
+            return {
+                name,
+                displayName,
+                hasVerifiedBadge
+            }
+        }
+    } catch (error) {
+        console.error("Error during API request:", error);
+        return null;
+    }
+}
 
 
 module.exports = {
-    getIdFromUsername
+    getIdFromUsername,
+    getUserFromId
 }
