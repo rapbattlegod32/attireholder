@@ -1,19 +1,28 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const noblox = require('noblox.js');
-const { discordaccount: { token, prefix }, robloxaccount: { robloseccookie, groupid } } = require('./config.json');
-const { groupStats, yearSales } = require('./functions/functions.js');
+//config and env
+const { discordaccount: { prefix }, robloxaccount: { groupid } } = require('./config/config.json');
+require('dotenv').config({ path: './config/.env' }); // Adjust path based on location
 
+const roblosecurity = process.env.ROBLOSECURITY_COOKIE;
+const discordtoken = process.env.DISCORD_TOKEN;
+
+console.log("ROBLOSECURITY_COOKIE:", roblosecurity ? "Loaded" : "Not Loaded");
+console.log("DISCORD_TOKEN:", discordtoken ? "Loaded" : "Not Loaded");
+
+
+const { groupStats, yearSales } = require('./src/utils/functions.js');
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
-const commandFolders = fs.readdirSync('./commands');
+const commandFolders = fs.readdirSync('./src/commands');
 
 for (const folder of commandFolders) {
-	const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
+	const commandFiles = fs.readdirSync(`./src/commands/${folder}`).filter(file => file.endsWith('.js'));
 	for (const file of commandFiles) {
-		const command = require(`./commands/${folder}/${file}`);
+		const command = require(`./src/commands/${folder}/${file}`);
 		client.commands.set(command.name, command);
 	}
 }
@@ -78,10 +87,10 @@ client.on('message', message => {
 });
 
 async function startApp () {
-    const currentUser = await noblox.setCookie(robloseccookie) 
+    const currentUser = await noblox.setCookie(roblosecurity) 
     console.log(`[roblox] Successfully logged into [${currentUser.name}] | [${currentUser.id}]`)
 }
 startApp()
 
 
-client.login(token);
+client.login(discordtoken);
