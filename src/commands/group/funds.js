@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
-const { discordaccount: { token, prefix }, robloxaccount: { robloseccookie, groupid } } = require('../../config.json');
-const { checkFunds, groupStats } = require('../../functions/functions.js');
+const { discordaccount: { token, prefix }, robloxaccount: { robloseccookie, groupid } } = require('../../../config/config.json');
+const { checkFunds, groupStats } = require('../../utils/functions.js');
 
 module.exports = {
   name: "funds",

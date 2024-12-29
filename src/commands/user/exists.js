@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { checkIfPlayerExists } = require('../../functions/functions.js');
+const { checkIfPlayerExists } = require('../../utils/functions.js');
 
 module.exports = {
     name: "exists",

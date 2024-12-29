@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { getHash } = require('../../functions/functions.js');
+const { getHash } = require('../../utils/functions.js');
 
 module.exports = {
     name: "hash",

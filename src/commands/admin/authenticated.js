@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { currentUser } = require('../../functions/functions.js'); 
+const { currentUser } = require('../../utils/functions.js'); 
 
 module.exports = {
     name: "authenticateduser",

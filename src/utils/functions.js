@@ -1,11 +1,15 @@
 const noblox = require('noblox.js');
-const { discordaccount: { token, prefix }, robloxaccount: { robloseccookie, groupid } } = require('../config.json');
 const fetch = require('node-fetch');
 const fs = require('node:fs');
+const axios = require('axios');
+
+const { discordaccount: { prefix }, robloxaccount: { groupid } } = require('../../config/config.json');
+require('dotenv').config({ path: '../../config/.env' }); // Adjust path based on location
+const roblosecurity = process.env.ROBLOSECURITY_COOKIE;
 
 //checks amount of funds in the group
 async function checkFunds(timeframe) {
-    const currentUser = await noblox.setCookie(robloseccookie) 
+    const currentUser = await noblox.setCookie(roblosecurity) 
     let avaiblefunds = await noblox.getGroupFunds(groupid)
     let grouprevenuesummary = await noblox.getGroupRevenueSummary(groupid, timeframe)
     return {
@@ -19,7 +23,7 @@ async function checkFunds(timeframe) {
 
 //shows group information
 async function groupStats() {
-    const currentUser = await noblox.setCookie(robloseccookie)
+    const currentUser = await noblox.setCookie(roblosecurity)
     let groupInfo = await noblox.getGroup(groupid)
     return {
         groupname: groupInfo.name,
@@ -32,7 +36,7 @@ async function groupStats() {
 }
 
 async function getMemberList() {
-    const currentUser = await noblox.setCookie(robloseccookie)
+    const currentUser = await noblox.setCookie(roblosecurity)
     //get all roles in the group
     const roles = await noblox.getRoles(groupid)
     //gets id from each role
@@ -46,7 +50,7 @@ async function getMemberList() {
 
 async function convertUserToId(user) {
     try {
-        const currentUser = await noblox.setCookie(robloseccookie)
+        const currentUser = await noblox.setCookie(roblosecurity)
         const id = await noblox.getIdFromUsername(user)
         return { ID: id }
     } catch (error) {
@@ -57,6 +61,44 @@ async function convertUserToId(user) {
 async function exileUser(id) {
     try {
         noblox.exile(groupid, id)
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function getIdFromUsername(username){
+    try {
+        const body = {
+            usernames: [
+                username
+            ],
+            excludeBannedUsers: false
+        };
+        
+        const response = await fetch(`https://users.roblox.com/v1/usernames/users`, {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {'Content-Type': 'application/json'}
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            
+            if (data && data.data && data.data.length > 0) {
+                const userid = data.data[0].id;
+                console.log(userid);
+                return {
+                    userId: userid 
+                }
+            } else {
+                let userId = `ID of ${username} was not found due to user probably not existing`;
+                return {
+                    userId
+                }
+            }
+        } else {
+            console.log("Error: " + response.status);
+        }
     } catch (error) {
         console.log(error);
     }
@@ -85,8 +127,12 @@ async function logoGroup(){
 
 async function getProfile(username) {
   try {
-    const ID = await noblox.getIdFromUsername(username);
-    let playerinfo = await noblox.getPlayerInfo(ID);
+    console.log(`Fetching profile for username: ${username}`);
+    const id = await noblox.getIdFromUsername(username);
+    if (!id) {
+      throw new Error(`User with username "${username}" does not exist.`);
+    }
+    let playerinfo = await noblox.getPlayerInfo(id);
 
     return {
       playerinfoage: playerinfo.age,
@@ -98,10 +144,11 @@ async function getProfile(username) {
       playerinfoisbanned: playerinfo.isBanned,
       playerinfojoindate: playerinfo.joinDate,
       playerinfooldnames: playerinfo.oldNames,
-      ID: ID
+      id: id
     };
   } catch (error) {
-    console.log(error);
+    console.log(`Error fetching profile for username "${username}":`, error.message);
+    throw error; // Re-throw the error to handle it in the calling function if needed
   }
 }
 
@@ -218,8 +265,8 @@ async function fetchCollectibles(username){
 
 async function genXCSRF(){
     try {
-        const currentUser = await noblox.setCookie(robloseccookie)
-        const XCSRF = await noblox.getGeneralToken(robloseccookie)
+        const currentUser = await noblox.setCookie(roblosecurity)
+        const XCSRF = await noblox.getGeneralToken(roblosecurity)
         return { XCSRF }
     } catch (error) {
         console.log(error);
@@ -241,8 +288,8 @@ async function currentUser(){
 
 async function session(){
     try {
-        const currentUser = await noblox.setCookie(robloseccookie);
-        const currentsession = await noblox.getSession(robloseccookie);
+        const currentUser = await noblox.setCookie(roblosecurity);
+        const currentsession = await noblox.getSession(roblosecurity);
 
         return {
             currentsession: currentsession.toString()
@@ -254,8 +301,8 @@ async function session(){
 
 async function getHash(){
     try {
-        const currentUser = await noblox.setCookie(robloseccookie);
-        const hash = await noblox.getHash(robloseccookie);
+        const currentUser = await noblox.setCookie(roblosecurity);
+        const hash = await noblox.getHash(roblosecurity);
         return {
             hash
         }
@@ -266,7 +313,7 @@ async function getHash(){
 
 async function yearSales(){
     try {
-        const currentUser = await noblox.setCookie(robloseccookie)
+        const currentUser = await noblox.setCookie(roblosecurity)
         let revenueSum = await noblox.getGroupRevenueSummary(groupid, "Year")
         return { revenueSum: revenueSum.itemSaleRobux }
     } catch (error) {
@@ -274,7 +321,44 @@ async function yearSales(){
     }
 }
 
+async function groupLink(){
+    try {
+        const currentUser = await noblox.setCookie(roblosecurity)
+        const { groupname, groupid } = await groupStats()
+        let newgroupname = groupname.replaceAll(' ', '-');
+        let grouplink = `https://www.roblox.com/communities/${groupid}/${newgroupname}#!/about`;
+        return {
+            grouplink
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function groupPayout(username, amount) {
+    try {
+        const currentUser = await noblox.setCookie(roblosecurity);
+        await noblox.groupPayout({ group: groupid, member: username, amount: amount });
+        axios.post(`https://twostepverification.roblox.com/v1/users/7235402110/challenges/authenticator/verify`, {
+            "challengeId": "string",
+            "actionType": 0,
+            "code": "string"
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        console.log(`Successfully paid ${amount} to ${username} in group ${groupid}`);
+    } catch (error) {
+        console.log(`Error during group payout for ${username}:`, error.message);
+    }
+}
+
 module.exports = {
+    groupPayout,
+    groupLink,
     checkFunds,
     groupStats,
     readShout,
@@ -294,5 +378,6 @@ module.exports = {
     getHash,
     session,
     isThereAPrimaryGroup,
-    yearSales
+    yearSales,
+    getIdFromUsername
 };

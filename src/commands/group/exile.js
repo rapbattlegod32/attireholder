@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
-const { getMemberList, convertUserToId, exileUser, groupStats } = require('../../functions/functions.js');
-const { robloxaccount: { protectedusers } } = require('../../config.json');
+const { getMemberList, convertUserToId, exileUser, groupStats } = require('../../utils/functions.js');
+const { robloxaccount: { protectedusers } } = require('../../../config/config.json');
 
 module.exports = {
     name: "exile",

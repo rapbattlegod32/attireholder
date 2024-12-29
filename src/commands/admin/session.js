@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { robloxaccount: { robloseccookie }} = require('../../config.json');
+const { robloxaccount: { robloseccookie }} = require('../../../config/config.json');
 
 module.exports = {
     name: "session",

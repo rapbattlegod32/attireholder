@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const { getProfile, getGroups, getBadges, playerPicture, seePremium, fetchCollectibles, checkIfPlayerExists, isThereAPrimaryGroup } = require('../../functions/functions.js');
+const { getProfile, getGroups, getBadges, playerPicture, seePremium, fetchCollectibles, checkIfPlayerExists, isThereAPrimaryGroup } = require('../../utils/functions.js');
 
 module.exports = { 
     name: "profile",
@@ -17,13 +17,24 @@ module.exports = {
         } 
 
         let { premium } = await seePremium(args[0]);
-        let { ID, playerinfoage, playerinfodisplayname, playerinfoblurb, playerinfofollowercount, playerinfofollowingcount, playerinfofriendcount, playerinfoisbanned, playerinfojoindate, playerinfooldnames } = await getProfile(args[0]);
+        let profile = await getProfile(args[0]);
+        if (!profile) {
+            message.channel.send('Error fetching profile.');
+            return;
+        }
+
+        let { ID, playerinfoage, playerinfodisplayname, playerinfoblurb, playerinfofollowercount, playerinfofollowingcount, playerinfofriendcount, playerinfoisbanned, playerinfojoindate, playerinfooldnames } = profile;
         let { imageurl } = await playerPicture(args[0]);
         let { numberofbadges } = await getBadges(args[0]);
         let { groupslength } = await getGroups(args[0]);
         let { sum, amountofcollectibles } = await fetchCollectibles(args[0]);
         let { primaryboolean, role } = await isThereAPrimaryGroup(args[0]);
 
+        if (!playerinfoblurb) {
+            playerinfoblurb = "none";
+        } else (playerinfoblurb) =>{
+            playerinfoblurb = `"${playerinfoblurb}"`;
+        };
 
         let primarybooleantostring = primaryboolean ? "true" : "none";
         let rolestring = role ? "true" : "none";
@@ -47,15 +58,12 @@ module.exports = {
             { name: `Primary Group`, value: `\`${primarybooleantostring}\``, inline: true },
             { name: `Role`, value: `\`${rolestring}\``, inline: true },
             { name: `Date Joined`, value: `\`${playerinfojoindate}\``, inline: false },
-            { name: `Blurb`, value: `\`"${playerinfoblurb}"\``, inline: false },
+            { name: `Blurb`, value: `\`${playerinfoblurb}\``, inline: false },
             { name: `Old Names`, value: `\`${playerinfooldnames}\``, inline: false },
-            
-
         )
         .setColor('RED')
         .setFooter(args[0])
         .setThumbnail(imageurl)
-        .setImage()
         .setURL(`https://www.roblox.com/users/${ID}/profile`)
         .setTimestamp()
         message.channel.send(embed)
