@@ -1,7 +1,4 @@
-# deprecated, check 'v14' branch
+# attire holder
 
-attireholder is a project I'm working on that uses noblox.js with discord.js.
-The whole purpose is to be able to control the account that holds my roblox group.
-
-important:
-/settings/secrets.json 
+attireholder is a project I'm working on that uses noblox.js to automate/control my roblox group
+it is paired with discord.js so I can control it from a discord bot from anywhere.
